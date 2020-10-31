@@ -25,6 +25,7 @@ const addBookValidation = (data) => {
   const schema = Joi.object({
     title: Joi.string().required(),
     author: Joi.string().required(),
+    userId: Joi.required(),
     publishedYear: Joi.number().max(2020).required(),
     description: Joi.string().required(),
     category: Joi.string().required(),

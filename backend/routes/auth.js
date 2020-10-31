@@ -25,11 +25,13 @@ router.post("/register", async (req, res) => {
     req.body.password,
     await bcrypt.genSalt(10)
   );
-  const author = new User({
+  const author = new Author({
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-  });
+    age: req.body.age,
+    contactnumber: req.body.contactnumber,
+  });   
 
   try {
     const savedUser = await author.save();
@@ -45,7 +47,7 @@ router.post("/login", async (req, res) => {
     return res.status(400).send(error.details[0].message);
   }
 
-  const user = await User.findOne({ email: req.body.email });
+  const user = await Author.findOne({ email: req.body.email });
   if (!user) {
     return res.status(400).send("Email or password is wrong");
   }
@@ -53,7 +55,7 @@ router.post("/login", async (req, res) => {
   const validPass = await bcrypt.compare(req.body.password, user.password);
   if (!validPass) return res.status(400).send("Invalid password");
 
-  res.send("logged in");
+  res.send(user._id);
 });
 
 router.post("/addbooks", async (req, res) => {
@@ -65,6 +67,7 @@ router.post("/addbooks", async (req, res) => {
   const book = new Book({
     title: req.body.title,
     author: req.body.author,
+    userId: req.body.userId,
     publishedYear: req.body.publishedYear,
     description: req.body.description,
     category: req.body.category,
